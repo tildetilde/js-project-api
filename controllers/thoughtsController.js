@@ -4,6 +4,30 @@ import loadThoughts from "../utils/loadThoughts.js";
 // Get all thoughts
 export const getAllThoughts = (req, res) => {
   const thoughts = loadThoughts();
+  let result = [...thoughts];
+
+  if (req.query.minHearts) {
+    const minHearts = parseInt(req.query.minHearts);
+    result = result.filter((t) => t.hearts >= minHearts);
+  }
+
+  if (req.query.after) {
+    const afterDate = new Date(req.query.after);
+    result = result.filter((t) => new Date(t.createdAt) > afterDate);
+  }
+
+  if (req.query.sortBy) {
+    const sortBy = req.query.sortBy;
+    const order = req.query.order === "desc" ? -1 : 1;
+    result.sort((a, b) => {
+      if (sortBy === "hearts") {
+        return (a.hearts - b.hearts) * order;
+      } else if (sortBy === "createdAt") {
+        return (new Date(a.createdAt) - new Date(b.createdAt)) * order;
+      }
+      return 0;
+    });
+  }
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -11,11 +35,11 @@ export const getAllThoughts = (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
 
-  const paginatedThoughts = thoughts.slice(startIndex, endIndex);
+  const paginatedThoughts = result.slice(startIndex, endIndex);
 
   res.json({
-    totalThoughts: thoughts.length,
-    totalPages: Math.ceil(thoughts.length / limit),
+    totalThoughts: result.length,
+    totalPages: Math.ceil(result.length / limit),
     currentPage: page,
     thoughts: paginatedThoughts,
   });
