@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import fs from "fs";
+import expressListEndpoints from "express-list-endpoints";
 
 // Defines the port the app will run on. Defaults to 8080, but can be overridden
 // when starting the server. Example command to overwrite PORT env variable value:
@@ -20,13 +21,30 @@ const loadThoughts = () => {
 
 // Start defining your routes here
 app.get("/", (req, res) => {
-  res.send("Hello Technigo!");
+  const endpoints = expressListEndpoints(app);
+  res.json({
+    message: "This is my API",
+    endpoints: endpoints,
+  });
 });
 
 app.get("/thoughts", (req, res) => {
   const thoughts = loadThoughts();
 
   res.json(thoughts);
+});
+
+app.get("/thoughts/:id", (req, res) => {
+  const thoughts = loadThoughts();
+  const id = req.params.id;
+
+  const thought = thoughts.find((t) => t._id === id);
+
+  if (!thought) {
+    return res.status(404).json({ message: "Thought not found" });
+  }
+
+  res.json(thought);
 });
 
 // Start the server
