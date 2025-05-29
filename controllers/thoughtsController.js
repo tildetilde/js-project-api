@@ -19,6 +19,15 @@ export const getAllThoughts = (req, res) => {
   if (req.query.sortBy) {
     const sortBy = req.query.sortBy;
     const order = req.query.order === "desc" ? -1 : 1;
+
+    const validSortFields = ["hearts", "createdAt"];
+    if (!validSortFields.includes(sortBy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sort field",
+      });
+    }
+
     result.sort((a, b) => {
       if (sortBy === "hearts") {
         return (a.hearts - b.hearts) * order;
