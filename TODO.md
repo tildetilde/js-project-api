@@ -4,12 +4,12 @@
 
 - [x] Create a `Thought` model in `models/Thought.js`
   - Fields: `message` (string, required, min/max length), `hearts`, `createdAt`
-- [ ] Seed the database with sample thoughts
-- [ ] Create route: `GET /thoughts` → return latest (e.g. 20)
-- [ ] Create route: `POST /thoughts` → save new thought
-- [ ] Create route: `PATCH /thoughts/:id/like` → increment hearts
-- [ ] Create route: `DELETE /thoughts/:id` → delete a thought
-- [ ] BONUS: `GET /thoughts?page=2` → use `.skip().limit()` for pagination
+- [x] Seed the database with sample thoughts
+- [x] Create route: `GET /thoughts` → return latest (e.g. 20)
+- [x] Create route: `POST /thoughts` → save new thought
+- [x] Create route: `PATCH /thoughts/:id/like` → increment hearts
+- [x] Create route: `DELETE /thoughts/:id` → delete a thought
+- [x] BONUS: `GET /thoughts?page=2` → use `.skip().limit()` for pagination
 - [ ] BONUS: `GET /thoughts?category=joy` → filter with query params
 
 ---
