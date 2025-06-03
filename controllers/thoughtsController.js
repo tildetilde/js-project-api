@@ -55,3 +55,54 @@ export const getThoughtById = async (req, res) => {
     res.status(400).json({ message: "Invalid ID", error: err.message });
   }
 };
+
+// POST /thoughts
+export const createThought = async (req, res) => {
+  const { message } = req.body;
+
+  try {
+    const newThought = new Thought({ message });
+    const saved = await newThought.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to create thought",
+      error: err.message,
+    });
+  }
+};
+
+// PATCH /thoughts/:id/like
+export const likeThought = async (req, res) => {
+  try {
+    const updated = await Thought.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { hearts: 1 } },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: "Thought not found" });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to like thought",
+      error: err.message,
+    });
+  }
+};
+
+// DELETE /thoughts/:id
+export const deleteThought = async (req, res) => {
+  try {
+    const deleted = await Thought.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Thought not found" });
+    res.json({ success: true, message: "Thought deleted", id: req.params.id });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to delete thought",
+      error: err.message,
+    });
+  }
+};
