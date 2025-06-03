@@ -1,5 +1,8 @@
+import { v4 as uuidv4 } from "uuid";
+
 // controllers/thoughtsController.js
 import loadThoughts from "../utils/loadThoughts.js";
+import saveThoughts from "../utils/saveThoughts.js";
 
 // Get all thoughts
 export const getAllThoughts = (req, res) => {
