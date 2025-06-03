@@ -4,8 +4,8 @@
 
 - [x] Create a `Thought` model in `models/Thought.js`
   - Fields: `message` (string, required, min/max length), `hearts`, `createdAt`
-- [ ] Seed the database with sample thoughts
-- [ ] Create route: `GET /thoughts` → return latest (e.g. 20)
+- [x] Seed the database with sample thoughts
+- [x] Create route: `GET /thoughts` → return latest (e.g. 20)
 - [ ] Create route: `POST /thoughts` → save new thought
 - [ ] Create route: `PATCH /thoughts/:id/like` → increment hearts
 - [ ] Create route: `DELETE /thoughts/:id` → delete a thought

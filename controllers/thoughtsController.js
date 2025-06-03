@@ -1,69 +1,57 @@
 // controllers/thoughtsController.js
-import loadThoughts from "../utils/loadThoughts.js";
-import saveThoughts from "../utils/saveThoughts.js";
+import { Thought } from "../models/Thought.js";
 
-// Get all thoughts
-export const getAllThoughts = (req, res) => {
-  const thoughts = loadThoughts();
-  let result = [...thoughts];
+// GET /thoughts
+export const getAllThoughts = async (req, res) => {
+  const {
+    minHearts,
+    after,
+    sortBy = "createdAt",
+    order = "desc",
+    page = 1,
+    limit = 10,
+  } = req.query;
 
-  if (req.query.minHearts) {
-    const minHearts = parseInt(req.query.minHearts);
-    result = result.filter((t) => t.hearts >= minHearts);
+  const query = {};
+  if (minHearts) {
+    query.hearts = { $gte: parseInt(minHearts) };
+  }
+  if (after) {
+    query.createdAt = { $gt: new Date(after) };
   }
 
-  if (req.query.after) {
-    const afterDate = new Date(req.query.after);
-    result = result.filter((t) => new Date(t.createdAt) > afterDate);
-  }
+  const sortOrder = order === "desc" ? -1 : 1;
+  const skip = (parseInt(page) - 1) * parseInt(limit);
 
-  if (req.query.sortBy) {
-    const sortBy = req.query.sortBy;
-    const order = req.query.order === "desc" ? -1 : 1;
+  try {
+    const totalThoughts = await Thought.countDocuments(query);
+    const thoughts = await Thought.find(query)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    const validSortFields = ["hearts", "createdAt"];
-    if (!validSortFields.includes(sortBy)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid sort field",
-      });
-    }
-
-    result.sort((a, b) => {
-      if (sortBy === "hearts") {
-        return (a.hearts - b.hearts) * order;
-      } else if (sortBy === "createdAt") {
-        return (new Date(a.createdAt) - new Date(b.createdAt)) * order;
-      }
-      return 0;
+    res.json({
+      totalThoughts,
+      totalPages: Math.ceil(totalThoughts / limit),
+      currentPage: parseInt(page),
+      thoughts,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get thoughts",
+      error: err.message,
     });
   }
-
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-
-  const paginatedThoughts = result.slice(startIndex, endIndex);
-
-  res.json({
-    totalThoughts: result.length,
-    totalPages: Math.ceil(result.length / limit),
-    currentPage: page,
-    thoughts: paginatedThoughts,
-  });
 };
 
-// Get a single thought by ID
-export const getThoughtById = (req, res) => {
-  const { id } = req.params;
-  const thoughts = loadThoughts();
-  const thought = thoughts.find((t) => t._id === id);
-
-  if (!thought) {
-    return res.status(404).json({ message: "Thought not found" });
+// GET /thoughts/:id
+export const getThoughtById = async (req, res) => {
+  try {
+    const thought = await Thought.findById(req.params.id);
+    if (!thought) return res.status(404).json({ message: "Thought not found" });
+    res.json(thought);
+  } catch (err) {
+    res.status(400).json({ message: "Invalid ID", error: err.message });
   }
-
-  res.json(thought);
 };
