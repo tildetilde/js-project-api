@@ -2,7 +2,7 @@
 
 ## 🥇 Step 1: Finalize backend using MongoDB & Mongoose
 
-- [ ] Create a `Thought` model in `models/Thought.js`
+- [x] Create a `Thought` model in `models/Thought.js`
   - Fields: `message` (string, required, min/max length), `hearts`, `createdAt`
 - [ ] Seed the database with sample thoughts
 - [ ] Create route: `GET /thoughts` → return latest (e.g. 20)
