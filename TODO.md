@@ -3,7 +3,10 @@
 ## 🥇 Step 1: Finalize backend using MongoDB & Mongoose
 
 - [x] Create a `Thought` model in `models/Thought.js`
-  - Fields: `message` (string, required, min/max length), `hearts`, `createdAt`
+  - Fields:
+    []`message` (string, required, min/max length),
+    []`hearts`,
+    []`createdAt`
 - [x] Seed the database with sample thoughts
 - [x] Create route: `GET /thoughts` → return latest (e.g. 20)
 - [x] Create route: `POST /thoughts` → save new thought
@@ -17,7 +20,7 @@
 ## 🥈 Step 2: Add validation & error handling
 
 - [ ] Add Mongoose validation in the model (e.g. min/max message length)
-- [ ] Use `try/catch` in all routes
+- [x] Use `try/catch` in all routes
 - [ ] Return proper status codes (400, 404, 500) with `.status().json()
 - [ ] Return useful error messages for the frontend
 
@@ -25,23 +28,20 @@
 
 ## 🥉 Step 3: Connect frontend to the API
 
-- [ ] Change API URL in `happy-thoughts` frontend
-  ```js
-  const API_URL = "http://localhost:8080/thoughts"; // or deployed URL
-  ```
+- [x] Change API URL in `happy-thoughts` frontend
 - Update fetch requests:
-- [ ] GET /thoughts → display the thought list
-- [ ] POST /thoughts → send a new thought
-- [ ] PATCH /thoughts/:id/like → like a thought
-- [ ] DELETE /thoughts/:id → delete a thought
-- [ ] Show errors and loading states in the UI
+- [x] GET /thoughts → display the thought list
+- [x] POST /thoughts → send a new thought
+- [x] PATCH /thoughts/:id/like → like a thought
+- [x] DELETE /thoughts/:id → delete a thought
+- [x] Show errors and loading states in the UI
 
 ## 🏁 Step 4: Deploy & manage environments
 
-- [ ] Deploy backend to Render
-- [ ] Deploy database to MongoDB Atlas
-- [ ] Add .env on Render with MONGO_URL
-- [ ] Update the frontend to point to deployed backend
+- [x] Deploy backend to Render
+- [x] Deploy database to MongoDB Atlas
+- [x] Add .env on Render with MONGO_URL
+- [x] Update the frontend to point to deployed backend
 
 ## 🌈 Step 5: Stretch goals – once core functionality is working
 
