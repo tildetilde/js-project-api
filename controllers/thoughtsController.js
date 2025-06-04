@@ -92,6 +92,38 @@ export const likeThought = async (req, res) => {
   }
 };
 
+// PATCH /thoughts/:id – Update the message of a thought
+export const updateThought = async (req, res) => {
+  const { id } = req.params;
+  const { message } = req.body;
+
+  try {
+    const thought = await Thought.findById(id);
+    if (!thought) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Thought not found" });
+    }
+
+    if (!message || message.length < 5 || message.length > 140) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid message length" });
+    }
+
+    thought.message = message;
+    await thought.save();
+
+    res.status(200).json({ success: true, updatedThought: thought });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Could not update thought",
+      error: err.message,
+    });
+  }
+};
+
 // DELETE /thoughts/:id
 export const deleteThought = async (req, res) => {
   try {

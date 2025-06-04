@@ -4,9 +4,10 @@
 
 - [x] Create a `Thought` model in `models/Thought.js`
   - Fields:
-    []`message` (string, required, min/max length),
-    []`hearts`,
-    []`createdAt`
+    [x]`message` (string, required, min/max length),
+    [x]`hearts`,
+    [x]`createdAt`
+- [ ] Add update thought in frontend and backend
 - [x] Seed the database with sample thoughts
 - [x] Create route: `GET /thoughts` → return latest (e.g. 20)
 - [x] Create route: `POST /thoughts` → save new thought
@@ -19,10 +20,10 @@
 
 ## 🥈 Step 2: Add validation & error handling
 
-- [ ] Add Mongoose validation in the model (e.g. min/max message length)
+- [x] Add Mongoose validation in the model (e.g. min/max message length)
 - [x] Use `try/catch` in all routes
-- [ ] Return proper status codes (400, 404, 500) with `.status().json()
-- [ ] Return useful error messages for the frontend
+- [x] Return proper status codes (400, 404, 500) with `.status().json()
+- [x] Return useful error messages for the frontend
 
 ---
 
