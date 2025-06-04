@@ -94,31 +94,20 @@ export const likeThought = async (req, res) => {
 
 // PATCH /thoughts/:id – Update the message of a thought
 export const updateThought = async (req, res) => {
-  const { id } = req.params;
   const { message } = req.body;
 
   try {
-    const thought = await Thought.findById(id);
-    if (!thought) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Thought not found" });
-    }
-
-    if (!message || message.length < 5 || message.length > 140) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid message length" });
-    }
-
-    thought.message = message;
-    await thought.save();
-
-    res.status(200).json({ success: true, updatedThought: thought });
+    const updated = await Thought.findByIdAndUpdate(
+      req.params.id,
+      { message },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: "Thought not found" });
+    res.json(updated);
   } catch (err) {
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: "Could not update thought",
+      message: "Failed to update thought",
       error: err.message,
     });
   }
