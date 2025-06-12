@@ -5,10 +5,11 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import expressListEndpoints from "express-list-endpoints";
 import thoughtsRoutes from "./routes/thoughts.js";
+import usersRoutes from "./routes/users.js";
 
 dotenv.config();
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8082;
 const app = express();
 
 const mongoUrl =
@@ -34,6 +35,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/thoughts", thoughtsRoutes);
+
+app.use("/users", usersRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

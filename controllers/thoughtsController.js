@@ -61,7 +61,10 @@ export const createThought = async (req, res) => {
   const { message } = req.body;
 
   try {
-    const newThought = new Thought({ message });
+    const newThought = new Thought({
+      message,
+      createdBy: req.user.id,
+    });
     const saved = await newThought.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -94,15 +97,24 @@ export const likeThought = async (req, res) => {
 
 // PATCH /thoughts/:id – Update the message of a thought
 export const updateThought = async (req, res) => {
+  const { id } = req.params;
   const { message } = req.body;
 
   try {
-    const updated = await Thought.findByIdAndUpdate(
-      req.params.id,
-      { message },
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ message: "Thought not found" });
+    const thought = await Thought.findById(id);
+
+    if (!thought) {
+      return res.status(404).json({ message: "Thought not found" });
+    }
+
+    if (thought.createdBy.toString() !== req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this thought" });
+    }
+
+    thought.message = message || thought.message;
+    const updated = await thought.save();
     res.json(updated);
   } catch (err) {
     res.status(400).json({
@@ -115,10 +127,23 @@ export const updateThought = async (req, res) => {
 
 // DELETE /thoughts/:id
 export const deleteThought = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const deleted = await Thought.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Thought not found" });
-    res.json({ success: true, message: "Thought deleted", id: req.params.id });
+    const thought = await Thought.findById(id);
+
+    if (!thought) {
+      return res.status(404).json({ message: "Thought not found" });
+    }
+
+    if (thought.createdBy.toString() !== req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this thought" });
+    }
+
+    await thought.deleteOne();
+    res.json({ success: true, message: "Thought deleted", id });
   } catch (err) {
     res.status(400).json({
       success: false,
